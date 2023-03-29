@@ -6,7 +6,7 @@ A pagina recebe os valores pela URL e gera um gráfico novo que substitui o ante
 Após gerar o gráfico, redireciona para a página de exibição.
 */
 
-$debug = false;
+$debug = true;
 
 // check IP
 if ($debug) echo $_SERVER['REMOTE_ADDR'] . "<br />";
@@ -36,47 +36,53 @@ if ($debug) echo "escala: " . $escala . "<br />";
 if ($debug) echo "start: " . $start . "<br />";
 if ($debug) echo "end: " . $end . "<br />";
 
-// check id_atualizar, verifica se existe, e se a data de devolução é null, então executa update.
+/* check id_atualizar, verifica se existe, e se a data de devolução é null, então executa update.
 if (isset($id_atualizar) && !empty($id_atualizar)) {
 }
-
-$rrdb="/var/www/programas/graphs/fdb.rrd"
-
-$graphObj->setOptions(array(
-    "--start" => "-24h",
-    "--end" => "now",
-    "--width" => "1152",
-    "--height" => "300",
-    "--color=BACK#00000000",
-    "--color=GRID#00000000",
-    "--color=MGRID#00000000",
-    "DEF:arraymax=$rrdb:devices:MAX",
-    "LINE2:arraymax#ff8c00ff",
-	"AREA:arraymax#ffa500cc"
-));
-
-rrd_graph("grafico.png", $setOptions)
-
-/*
-$fileName = "rrd.png";
-rrd_graph($fileName, $options);
-
-header("Content-Type: image/png");
-header("Content-Length: " . filesize($name));
-
-$fp = fopen($name, 'rb');
-if( $fp ) {
-  fpassthru($fp);
-  fclose($fp);
-}
-
-exit();
 */
 
-/*
-$rrdb="/var/www/programas/graphs/fdb.rrd"
+$file = "/var/www/programas/dev/grafico.png";
+$rrdb = "/var/www/programas/graphs/fdb.rrd";
+if ($debug) var_dump($file);
+if ($debug) var_dump($rrdb); 
 
-rrdtool graph "/var/www/programas/graphs/diario.png" \
+// Get params if specified in the URL - otherwise assume some sensible defaults:
+$host = isset($_GET['host']) ? htmlspecialchars($_GET['host']) : "palm";
+$res = isset($_GET['res']) ? htmlspecialchars($_GET['res']) : "wan";
+$start = isset($_GET['start']) ? htmlspecialchars($_GET['start']) : 1;
+$end = isset($_GET['end']) ? htmlspecialchars($_GET['end']) : 0;
+$type = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "b"; 
+$ds0 = str_pad(isset($_GET['ds0']) ? htmlspecialchars($_GET['ds0']) : "input", 10, " ");
+$ds1 = str_pad(isset($_GET['ds1']) ? htmlspecialchars($_GET['ds1']) : "output", 10, " ");
+$ds0color = isset($_GET['ds0color']) ? htmlspecialchars($_GET['ds0color']) : "00FF00";
+$ds1color = isset($_GET['ds1color']) ? htmlspecialchars($_GET['ds1color']) : "0000FF";
+
+$options = array(
+	"--start", 1,
+	"--end", 0,
+	"--title=Teste",
+	"--lower-limit=0",
+	"--upper-limit=100",
+	"--width=450",
+	"--height=120",
+	"--slope-mode",
+	"DEF:arraymax=".$rrdb.":devices:MAX",
+    "LINE2:arraymax#ff8c00ff",
+    "AREA:arraymax#ffa500cc:'Devices\n'",
+    "COMMENT:'Atual\:  '",
+    "GPRINT:arraymax:LAST:%6.0lf",
+    "COMMENT:'\n'",
+    "COMMENT:'Máximo\: ' ",
+    "GPRINT:arraymax:MAX:%6.0lf ",
+	"COMMENT:'\n'",
+	"COMMENT:'Mínimo\: ' ",
+	"GPRINT:arraymax:MIN:%6.0lf ",
+	"COMMENT:\\n",
+);
+
+$resultado = rrd_graph($file, $options);
+
+/*
  --start -24h --end now --step=60               \
  --width=1152 --height=300                      \
  --x-grid MINUTE:10:HOUR:1:HOUR:1:0:%Hh \
