@@ -1,10 +1,10 @@
 
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
+    <meta name="description" content="Personalização de gráficos rrdtool">
     <meta name="author" content="KCSC">
     <meta name="generator" content="KCSC v1">
     <title>Campus Fernando Costa</title>
@@ -85,6 +85,7 @@
 
 </div>
 
+<form action="" method="get">
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasBottomLabel">
   <div class="offcanvas-header">
@@ -92,24 +93,24 @@
   </div>
   <div class="offcanvas-body small">
     <label for="cor1" class="form-label">Preenchimento</label>
-    <input type="color" class="form-control form-control-color" id="cor1" value="#ffa500" title="Selecione uma cor">
+    <input type="color" class="form-control form-control-color" id="cor1" name="cor_preenchimento" value="#ffa500" title="Selecione uma cor">
     <br />
     <label for="transparencia" class="form-label">Transparência</label>
-    <input type="range" class="form-range" min="0" max="5" step="0.5" id="transparencia">
+    <input type="range" class="form-range" min="0" max="100" value="0" step="1" id="transparencia" name="transparencia">
     <br />
     <br />
     <label for="cor2" class="form-label">Linha</label>
-    <input type="color" class="form-control form-control-color" id="cor2" value="#ff8c00" title="Selecione uma cor">
+    <input type="color" class="form-control form-control-color" id="cor2" name="cor_linha" value="#ff8c00" title="Selecione uma cor">
     <br />
     <label for="cor3" class="form-label">Grade geral</label>
-    <input type="color" class="form-control form-control-color" id="cor3" value="#a5a5a5" title="Selecione uma cor">
+    <input type="color" class="form-control form-control-color" id="cor3" name="cor_grade_geral" value="#a5a5a5" title="Selecione uma cor">
     <br />
     <label for="cor4" class="form-label">Grade da escala</label>
-    <input type="color" class="form-control form-control-color" id="cor4" value="#ff6666" title="Selecione uma cor">
+    <input type="color" class="form-control form-control-color" id="cor4" name="cor_grade_escala" value="#ff6666" title="Selecione uma cor">
     
     <br />
     <label for="periodo" class="form-label">Período</label>
-    <select class="form-select" id="periodo">
+    <select class="form-select" id="periodo" name="periodo">
       <option value="-12">15 minutos</option>
       <option value="-11">30 minutos</option>
       <option value="-10">45 minutos</option>
@@ -144,10 +145,10 @@
       <option value="19">Quatro anos</option>
       <option value="20">Cinco anos</option>
     </select>
-
+   
    <br />
    <label for="escala" class="form-label">Escala</label>
-    <select class="form-select" id="escala">
+    <select class="form-select" id="escala" name="escala">
       <option value="0" selected>Automática</option>
       <option value="1">10</option>
       <option value="2">100</option>
@@ -170,16 +171,18 @@
     <br />
     <br />
     <div class="container text-center">
-      <button type="button" class="btn btn-primary btn-lg">Gerar gráfico</button>
+      <button type="submit" name="submit" class="btn btn-primary btn-lg">Gerar gráfico</button>
     </div>
     <br />
     <br />
     <div class="container text-center">
-      <button type="button" class="btn btn-outline-secondary">Restaurar</button>
+      <button type="reset" name="reset" class="btn btn-outline-secondary">Restaurar</button>
     </div>
   </div>
 </div>
 <!-- Fim Personalização do período -->
+
+</form>
 
     <div class="b-example-divider"></div>
   </main>
