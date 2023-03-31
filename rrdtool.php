@@ -6,7 +6,7 @@ A pagina recebe os valores pela URL e gera um gráfico novo que substitui o ante
 Após gerar o gráfico, redireciona para a página de exibição.
 */
 
-$debug = false;
+$debug = 0;
 
 // check IP
 if ($debug) echo $_SERVER['REMOTE_ADDR'] . "<br />";
@@ -26,9 +26,8 @@ $escala = $_GET['escala'];
 $start = $_GET['start'];
 $end = $_GET['end'];
 
-if ($debug) echo "transparencia: " . $transparencia . "<br />";
-
 // converter transparência de 0 a 255 em hexadecimal de dois dígitos, by ChatGPT =D
+if ($debug) echo "transparencia: " . $transparencia . "<br />";
 $transparencia = dechex($transparencia); // converter para hexadecimal
 $transparencia = str_pad($transparencia, 2, '0', STR_PAD_LEFT); // adicionar zero à esquerda, se necessário
 
@@ -42,21 +41,33 @@ if ($debug) echo "escala: " . $escala . "<br />";
 if ($debug) echo "start: " . $start . "<br />";
 if ($debug) echo "end: " . $end . "<br />";
 
+// files
 $file = "/var/www/programas/dev/grafico.png";
 $rrdb = "/var/www/programas/graphs/fdb.rrd";
 if ($debug) echo "file: " . $file . "<br />";
 if ($debug) echo "rrdb: " . $rrdb . "<br />";
 
+// start to unix
+$start = strtotime($start);
+if ($debug) echo "start unix: " . $start . "<br />";
+
+// end to unix
+$end = strtotime($end);
+if ($debug) echo "end unix: " . $end . "<br />";
+
+// escala
+$escala = ($escala == 0) ? "--alt-autoscale" : "--upper-limit=$escala";
+if ($debug) echo "escala: " . $escala . "<br />";
+
 // parâmetros do gráfico
 $graphArgs = array(
- "--start","-24h",
- "--end","now",
+ "--start", $start,
+ "--end", $end+24*60*60,    // caso o usuário escolha como data inicial e final o mesmo dia, incrementa o tmepo de 24h em unixtime.
  "--step=60",
  "--width=1152", "--height=300",
- "--x-grid=MINUTE:10:HOUR:1:HOUR:1:0:%Hh",
  "-Y",
- "--alt-autoscale",
  "--lower-limit=0",
+ $escala,
  "--rigid",
  "--color=BACK#FFF",        // fixo, fundo da área da imagem
  "--color=SHADEA#FFF",      // fixo, borda superior e esquerda
@@ -67,16 +78,16 @@ $graphArgs = array(
  "--color=MGRID$cor_grade_escala",    // personalizado, grade das escalas
  "--color=FRAME#5e5e5e",    // fixo, quadradinho da legenda
  "--color=ARROW#5e5e5e",    // fixo, setinha dos eixos
- "--font=LEGEND:12:'DroidSansMono,DejaVuSansMono'",
- "--font=AXIS:12:'DroidSansMono,DejaVuSansMono'", "--font-render-mode=normal", "--dynamic-labels",
+ "--font=LEGEND:10:'DroidSansMono,DejaVuSansMono'",
+ "--font=AXIS:10:'DroidSansMono,DejaVuSansMono'", "--font-render-mode=normal", "--dynamic-labels",
  "DEF:arraymax=$rrdb:devices:MAX",
  "LINE2:arraymax$cor_linha",   // personalizado, linha dos dados
  "AREA:arraymax$cor_preenchimento$transparencia: Devices\l",   // personalizado, área dos dados + transparência
- "COMMENT:Último\:  ",
+ "COMMENT:Último\:",
  "GPRINT:arraymax:LAST:%6.0lf\l",
  "COMMENT:Máximo\:",
  "GPRINT:arraymax:MAX:%6.0lf\l",
- "COMMENT:Mínimo\: ",
+ "COMMENT:Mínimo\:",
  "GPRINT:arraymax:MIN:%6.0lf\l"
 );
 
