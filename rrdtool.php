@@ -26,6 +26,8 @@ $escala = $_GET['escala'];
 $start = $_GET['start'];
 $end = $_GET['end'];
 
+if ($debug) echo "transparencia: " . $transparencia . "<br />";
+
 // converter transparência de 0 a 255 em hexadecimal de dois dígitos, by ChatGPT =D
 $transparencia = dechex($transparencia); // converter para hexadecimal
 $transparencia = str_pad($transparencia, 2, '0', STR_PAD_LEFT); // adicionar zero à esquerda, se necessário
