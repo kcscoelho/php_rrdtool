@@ -36,72 +36,50 @@ if ($debug) echo "escala: " . $escala . "<br />";
 if ($debug) echo "start: " . $start . "<br />";
 if ($debug) echo "end: " . $end . "<br />";
 
-/* check id_atualizar, verifica se existe, e se a data de devolução é null, então executa update.
-if (isset($id_atualizar) && !empty($id_atualizar)) {
-}
-*/
-
 $file = "/var/www/programas/dev/grafico.png";
 $rrdb = "/var/www/programas/graphs/fdb.rrd";
-if ($debug) var_dump($file);
-if ($debug) var_dump($rrdb); 
+if ($debug) echo "file: " . $file . "<br />";
+if ($debug) echo "rrdb: " . $rrdb . "<br />";
 
-// Get params if specified in the URL - otherwise assume some sensible defaults:
-$host = isset($_GET['host']) ? htmlspecialchars($_GET['host']) : "palm";
-$res = isset($_GET['res']) ? htmlspecialchars($_GET['res']) : "wan";
-$start = isset($_GET['start']) ? htmlspecialchars($_GET['start']) : 1;
-$end = isset($_GET['end']) ? htmlspecialchars($_GET['end']) : 0;
-$type = isset($_GET['type']) ? htmlspecialchars($_GET['type']) : "b"; 
-$ds0 = str_pad(isset($_GET['ds0']) ? htmlspecialchars($_GET['ds0']) : "input", 10, " ");
-$ds1 = str_pad(isset($_GET['ds1']) ? htmlspecialchars($_GET['ds1']) : "output", 10, " ");
-$ds0color = isset($_GET['ds0color']) ? htmlspecialchars($_GET['ds0color']) : "00FF00";
-$ds1color = isset($_GET['ds1color']) ? htmlspecialchars($_GET['ds1color']) : "0000FF";
-
-$options = array(
-	"--start", 1,
-	"--end", 0,
-	"--title=Teste",
-	"--lower-limit=0",
-	"--upper-limit=100",
-	"--width=450",
-	"--height=120",
-	"--slope-mode",
-	"DEF:arraymax=".$rrdb.":devices:MAX",
-    "LINE2:arraymax#ff8c00ff",
-    "AREA:arraymax#ffa500cc:'Devices\n'",
-    "COMMENT:'Atual\:  '",
-    "GPRINT:arraymax:LAST:%6.0lf",
-    "COMMENT:'\n'",
-    "COMMENT:'Máximo\: ' ",
-    "GPRINT:arraymax:MAX:%6.0lf ",
-	"COMMENT:'\n'",
-	"COMMENT:'Mínimo\: ' ",
-	"GPRINT:arraymax:MIN:%6.0lf ",
-	"COMMENT:\\n",
+// parâmetros do gráfico
+$graphArgs = array(
+ "--start","-24h",
+ "--end","now",
+ "--step=60",
+ "--width=1152", "--height=300",
+ "--x-grid=MINUTE:10:HOUR:1:HOUR:1:0:%Hh",
+ "-Y",
+ "--alt-autoscale",
+ "--lower-limit=0",
+ "--rigid",
+ "--color=BACK#EEEEEE00",
+ "--color=SHADEA#EEEEEE00",
+ "--color=SHADEB#EEEEEE00",
+ "--color=FONT#000000",
+ "--color=CANVAS#FFFFFF00",
+ "--color=GRID#a5a5a5",
+ "--color=MGRID#FF6666",
+ "--color=FRAME#5e5e5e",
+ "--color=ARROW#5e5e5e",
+ "--font=LEGEND:12:'DroidSansMono,DejaVuSansMono'",
+ "--font=AXIS:12:'DroidSansMono,DejaVuSansMono'", "--font-render-mode=normal", "--dynamic-labels",
+ "DEF:arraymax=$rrdb:devices:MAX",
+ "LINE2:arraymax#ff8c00ff",
+ "AREA:arraymax#ffa500cc: Devices\l",
+ "COMMENT:Último\:  ",
+ "GPRINT:arraymax:LAST:%6.0lf\l",
+ "COMMENT:Máximo\:",
+ "GPRINT:arraymax:MAX:%6.0lf\l",
+ "COMMENT:Mínimo\: ",
+ "GPRINT:arraymax:MIN:%6.0lf\l"
 );
 
-$resultado = rrd_graph($file, $options);
+// gerar o gráfico
+$imageData = rrd_graph($file, $graphArgs);
 
-/*
- --start -24h --end now --step=60               \
- --width=1152 --height=300                      \
- --x-grid MINUTE:10:HOUR:1:HOUR:1:0:%Hh \
- -Y --alt-autoscale --lower-limit=0 --rigid -c BACK#EEEEEE00 -c SHADEA#EEEEEE00 -c SHADEB#EEEEEE00 \
- -c FONT#000000 -c CANVAS#FFFFFF00 -c GRID#a5a5a5 -c MGRID#FF6666 -c FRAME#5e5e5e  \
- -c ARROW#5e5e5e -R normal --font LEGEND:12:'DroidSansMono,DejaVuSansMono' \
- --font AXIS:12:'DroidSansMono,DejaVuSansMono' --font-render-mode normal --dynamic-labels \
- DEF:arraymax=$rrdb:devices:MAX                 \
- LINE2:arraymax#ff8c00ff			\
- AREA:arraymax#ffa500cc:'Devices\n' \
- COMMENT:'Atual\:  '\
- GPRINT:arraymax:LAST:%6.0lf\
- COMMENT:'\n'\
- COMMENT:'Máximo\: ' \
- GPRINT:arraymax:MAX:%6.0lf \
- COMMENT:'\n'\
- COMMENT:'Mínimo\: ' \
- GPRINT:arraymax:MIN:%6.0lf \
- COMMENT:'\l'	
-*/
+// verifica erro
+if ($debug && !$imageData) echo "erro: " . rrd_error() . "<br />";
 
 ?>
+
+ 
