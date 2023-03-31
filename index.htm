@@ -111,39 +111,20 @@
     <br />
     <label for="periodo" class="form-label">Período</label>
     <select class="form-select" id="periodo" name="periodo">
-      <option value="-12">15 minutos</option>
-      <option value="-11">30 minutos</option>
-      <option value="-10">45 minutos</option>
-      <option value="-9">Uma hora</option>
-      <option value="-8">Duas horas</option>
-      <option value="-7">Três horas</option>
-      <option value="-6">Quatro horas</option>
-      <option value="-5">Seis horas</option>
-      <option value="-4">Oito horas</option>
-      <option value="-3">12 horas</option>
-      <option value="-2">16 horas</option>
-      <option value="-1">24 horas</option>
+      <option value="6h">6 horas</option>
+      <option value="12h">12 horas</option>
       <option value="0" selected>Hoje</option>
-      <option value="1">Ontem</option>
-      <option value="2">Essa semama</option>
-      <option value="3">Uma semama</option>
-      <option value="4">Semana passada</option>
-      <option value="5">Duas semanas</option>
-      <option value="6">Três semanas</option>
-      <option value="7">Este mês</option>
-      <option value="8">Um mês</option>
-      <option value="9">Mes passado</option>
-      <option value="10">Dois meses</option>
-      <option value="11">Três meses</option>
-      <option value="12">Quatro meses</option>
-      <option value="13">Seis meses</option>
-      <option value="14">Este ano</option>
-      <option value="15">Um ano</option>
-      <option value="16">Ano passado</option>
-      <option value="17">Dois anos</option>
-      <option value="18">Três anos</option>
-      <option value="19">Quatro anos</option>
-      <option value="20">Cinco anos</option>
+      <option value="1d">1 dia</option>
+      <option value="2d">2 dias</option>
+      <option value="1w">1 semana</option>
+      <option value="2w">2 semanas</option>
+      <option value="1months">1 mês</option>
+      <option value="2months">2 meses</option>
+      <option value="3months">3 meses</option>
+      <option value="6months">6 meses</option>
+      <option value="1years">1 ano</option>
+      <option value="2years">2 anos</option>
+      <option value="3years">3 anos</option>
     </select>
    
    <br />
@@ -163,9 +144,9 @@
    <br />
    <label for="datepicker" class="form-label">Período</label>
    <div class="input-daterange input-group mb-3 datepicker" id="datepicker">
-     <input type="text" class="input form-control" name="start" />
+     <input type="text" class="input form-control" name="start" autocomplete="off" />
      <span class="input-group-text">&nbsp;&nbsp;&nbsp;até&nbsp;&nbsp;&nbsp;</span>
-     <input type="text" class="input form-control" name="end" />
+     <input type="text" class="input form-control" name="end" autocomplete="off" />
    </div>
 
     <br />
