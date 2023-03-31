@@ -11,8 +11,8 @@ $debug = true;
 // check IP
 if ($debug) echo $_SERVER['REMOTE_ADDR'] . "<br />";
 $IP=substr($_SERVER['REMOTE_ADDR'],0,12);
-if ($IP != '200.144.232.') {// { die("No no no..."); }
-if ($IP != '143.107.191.') { die("No no no..."); }
+if ($IP != '200.144.232.') {
+  if ($IP != '143.107.191.') { die("No no no..."); }
 }
 
 // recebe valores
@@ -52,20 +52,20 @@ $graphArgs = array(
  "--alt-autoscale",
  "--lower-limit=0",
  "--rigid",
- "--color=BACK#EEEEEE00",
- "--color=SHADEA#EEEEEE00",
- "--color=SHADEB#EEEEEE00",
- "--color=FONT#000000",
- "--color=CANVAS#FFFFFF00",
- "--color=GRID#a5a5a5",
- "--color=MGRID#FF6666",
- "--color=FRAME#5e5e5e",
- "--color=ARROW#5e5e5e",
+ "--color=BACK#FFF",        // fixo, fundo da área da imagem
+ "--color=SHADEA#FFF",      // fixo, borda superior e esquerda
+ "--color=SHADEB#FFF",      // fixo, borda inferior e direita
+ "--color=FONT#000",        // fixo, fonte
+ "--color=CANVAS#FFF",      // fixo, fundo da área de plotagem
+ "--color=GRID#a5a5a5",     // personalizado, grade geral
+ "--color=MGRID#ff6666",    // personalizado, grade das escalas
+ "--color=FRAME#5e5e5e",    // personalizado, quadradinho da legenda
+ "--color=ARROW#5e5e5e",    // personalizado, setinha dos eixos
  "--font=LEGEND:12:'DroidSansMono,DejaVuSansMono'",
  "--font=AXIS:12:'DroidSansMono,DejaVuSansMono'", "--font-render-mode=normal", "--dynamic-labels",
  "DEF:arraymax=$rrdb:devices:MAX",
- "LINE2:arraymax#ff8c00ff",
- "AREA:arraymax#ffa500cc: Devices\l",
+ "LINE2:arraymax#ff8c00",   // personalizado, linha dos dados
+ "AREA:arraymax#ffa500cc: Devices\l",   // personalizado, área dos dados + transparência
  "COMMENT:Último\:  ",
  "GPRINT:arraymax:LAST:%6.0lf\l",
  "COMMENT:Máximo\:",
@@ -79,7 +79,3 @@ $imageData = rrd_graph($file, $graphArgs);
 
 // verifica erro
 if ($debug && !$imageData) echo "erro: " . rrd_error() . "<br />";
-
-?>
-
- 
