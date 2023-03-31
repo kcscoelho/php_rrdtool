@@ -10,10 +10,12 @@ $debug = 0;
 
 // check IP
 if ($debug) echo $_SERVER['REMOTE_ADDR'] . "<br />";
+/*
 $IP=substr($_SERVER['REMOTE_ADDR'],0,12);
 if ($IP != '200.144.232.') {
   if ($IP != '143.107.191.') { die("No no no..."); }
 }
+*/
 
 // recebe valores
 $cor_preenchimento = $_GET['cor_preenchimento'];
