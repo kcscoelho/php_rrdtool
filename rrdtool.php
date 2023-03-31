@@ -6,7 +6,7 @@ A pagina recebe os valores pela URL e gera um gráfico novo que substitui o ante
 Após gerar o gráfico, redireciona para a página de exibição.
 */
 
-$debug = true;
+$debug = false;
 
 // check IP
 if ($debug) echo $_SERVER['REMOTE_ADDR'] . "<br />";
@@ -25,6 +25,10 @@ $periodo = $_GET['periodo'];
 $escala = $_GET['escala'];
 $start = $_GET['start'];
 $end = $_GET['end'];
+
+// converter transparência de 0 a 255 em hexadecimal de dois dígitos, by ChatGPT =D
+$transparencia = dechex($transparencia); // converter para hexadecimal
+$transparencia = str_pad($transparencia, 2, '0', STR_PAD_LEFT); // adicionar zero à esquerda, se necessário
 
 if ($debug) echo "cor_preenchimento: " . $cor_preenchimento . "<br />";
 if ($debug) echo "transparencia: " . $transparencia . "<br />";
@@ -57,15 +61,15 @@ $graphArgs = array(
  "--color=SHADEB#FFF",      // fixo, borda inferior e direita
  "--color=FONT#000",        // fixo, fonte
  "--color=CANVAS#FFF",      // fixo, fundo da área de plotagem
- "--color=GRID#a5a5a5",     // personalizado, grade geral
- "--color=MGRID#ff6666",    // personalizado, grade das escalas
- "--color=FRAME#5e5e5e",    // personalizado, quadradinho da legenda
- "--color=ARROW#5e5e5e",    // personalizado, setinha dos eixos
+ "--color=GRID$cor_grade_geral",     // personalizado, grade geral
+ "--color=MGRID$cor_grade_escala",    // personalizado, grade das escalas
+ "--color=FRAME#5e5e5e",    // fixo, quadradinho da legenda
+ "--color=ARROW#5e5e5e",    // fixo, setinha dos eixos
  "--font=LEGEND:12:'DroidSansMono,DejaVuSansMono'",
  "--font=AXIS:12:'DroidSansMono,DejaVuSansMono'", "--font-render-mode=normal", "--dynamic-labels",
  "DEF:arraymax=$rrdb:devices:MAX",
- "LINE2:arraymax#ff8c00",   // personalizado, linha dos dados
- "AREA:arraymax#ffa500cc: Devices\l",   // personalizado, área dos dados + transparência
+ "LINE2:arraymax$cor_linha",   // personalizado, linha dos dados
+ "AREA:arraymax$cor_preenchimento$transparencia: Devices\l",   // personalizado, área dos dados + transparência
  "COMMENT:Último\:  ",
  "GPRINT:arraymax:LAST:%6.0lf\l",
  "COMMENT:Máximo\:",
@@ -79,3 +83,9 @@ $imageData = rrd_graph($file, $graphArgs);
 
 // verifica erro
 if ($debug && !$imageData) echo "erro: " . rrd_error() . "<br />";
+
+// redirect to show page
+if ($debug) die();
+
+header("Location: .");
+die();
