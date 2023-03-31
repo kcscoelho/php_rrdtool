@@ -48,10 +48,12 @@ if ($debug) echo "file: " . $file . "<br />";
 if ($debug) echo "rrdb: " . $rrdb . "<br />";
 
 // start to unix
+if ($start == "") $start = date("d-m-Y");
 $start = strtotime($start);
 if ($debug) echo "start unix: " . $start . "<br />";
 
 // end to unix
+if ($end == "") $end = date("d-m-Y");
 $end = strtotime($end);
 if ($debug) echo "end unix: " . $end . "<br />";
 
@@ -62,7 +64,7 @@ if ($debug) echo "escala: " . $escala . "<br />";
 // parâmetros do gráfico
 $graphArgs = array(
  "--start", $start,
- "--end", $end+24*60*60,    // caso o usuário escolha como data inicial e final o mesmo dia, incrementa o tmepo de 24h em unixtime.
+ "--end", $end+24*60*60,    // caso o usuário escolha como data inicial e final o mesmo dia, incrementa o tempo em 24h em unixtime.
  "--step=60",
  "--width=1152", "--height=300",
  "-Y",
